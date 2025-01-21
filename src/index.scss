@@ -1,0 +1,37 @@
+// @import font-family
+
+html,
+body, 
+#root,
+.app,
+.content {
+    height: 100%;
+    width: 100%;
+    font-family: 'Source Sans Pro', sans-serif;
+};
+
+.main {
+    height: 92vh;
+    overflow-y: auto;
+}
+
+.app {
+    position: relative;
+    display: flex;
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #1F2A40;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+::-webkit-scrollbar-track:hover {
+    background: #555;
+}
