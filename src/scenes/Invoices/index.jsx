@@ -4,7 +4,7 @@ import {tokens} from "../../theme"
 import Header from '../../components/global/Header'
 import {mockDataInvoices} from '../../data/mockData'
 
-const index = () => {
+const index = ({contentStyles}) => {
   const theme = useTheme()
   const colors = tokens(theme.palette.mode)
 
@@ -49,11 +49,10 @@ const index = () => {
   ]
 
   return (
-    <Box m="20px">
+    <Box>
       <Header title="INVOICES" subtitle="The List of Invoice Balances"/>
       <Box
-        mt="40px"
-        height="75vh"
+        height={contentStyles.height}
         sx={{
          '& .MuiDataGrid-root': {
             border: "none",

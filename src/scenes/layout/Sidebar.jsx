@@ -24,20 +24,9 @@ const SideBar = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [selected, setSelected] = useState("index");
-  const [fold, setFold] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const menusRef = useRef(null);
-
-  useEffect(()=> {
-    setFold(false)
-    const container = menusRef.current;  
-    if (container === null) return;
-    console.log(container.scrollHeight, container.clientHeight);
-    if (container.scrollHeight > container.clientHeight) setFold(true)
-  }, [menusRef])
-
-  console.log(fold)
 
   return (
     <Box
@@ -59,14 +48,15 @@ const SideBar = () => {
       >
         <Menu>
           {/* LOGO AND MENU ICON */}
-          <Box> 
+          <Box>
             <MenuItem 
               onClick={() => setIsCollapsed(!isCollapsed)}
               icon={isCollapsed ? <MenuOutlined /> : undefined}
               style={{
                 backgroundColor: 'transparent',
-                margin: "10px 0 20px 0",
+                margin: "0.45rem 0 0 0",
                 color: colors.grey[100],
+                height: "2.55rem",
               }}
             >
               {!isCollapsed && (
@@ -88,7 +78,7 @@ const SideBar = () => {
 
             {/* USER */}
             {!isCollapsed && (
-              <Box mb="25px" >
+              <Box padding ="1.3rem 0">
                 <Box display="flex" justifyContent="center" alignItems="center">
                   <img 
                     src="../../assets/user.png" 
@@ -99,153 +89,117 @@ const SideBar = () => {
                   />
                 </Box>
                 <Box textAlign="center">
-                  <Typography variant="h2" color={colors.grey[100]} fontWeight="bold" sx={{mt: "10px"}}>Solomon</Typography>
+                  <Typography variant="h3" color={colors.grey[100]} fontWeight="bold" sx={{mt: "10px"}}>Solomon</Typography>
                   <Typography variant="h5" color={colors.greenAccent[500]}>VP Admin</Typography>
                 </Box>
               </Box>
             )}
+          </Box>
+          {/* MENUS */}
+          <Box 
+            ref={menusRef} 
+            height={isCollapsed ? "90.5dvh" : "60.7dvh"}
+            overflow="auto" 
+            padding={isCollapsed ? undefined : "3% 0 3% 10%"}
+            borderTop={`1px solid ${colors.primary[500]}`}
+          >
+            <MenuNav
+              title="Dashboard"
+              to="/"
+              icon={<HomeOutlined />}
+              selected={selected}
+              setSelected={setSelected}
+              isCollapsed ={isCollapsed}
+            />
 
-            {/* MENUS */}
-            <Box 
-              ref={menusRef} 
-              height={isCollapsed ? "90.9vh" : "70vh"} 
-              overflow="auto" 
-              padding={isCollapsed ? undefined : "3% 0 3% 10%"}
-              borderTop={`1px solid ${colors.primary[500]}`}
-            >
+            <MenuGroup title="Data" isCollapsed={isCollapsed}>
               <MenuNav
-                title="Dashboard"
-                to="/"
-                icon={<HomeOutlined />}
+                title="Manage Team"
+                to="/team"
+                icon={<PeopleOutlined />}
                 selected={selected}
                 setSelected={setSelected}
                 isCollapsed ={isCollapsed}
               />
+              <MenuNav
+                title="Contacts Information"
+                to="/contacts"
+                icon={<ContactsOutlined />}
+                selected={selected}
+                setSelected={setSelected}
+                isCollapsed ={isCollapsed}
+              />
+              <MenuNav
+                title="Invoices Balances"
+                to="/invoices"
+                icon={<ReceiptOutlined />}
+                selected={selected}
+                setSelected={setSelected}
+                isCollapsed ={isCollapsed}
+              />
+            </MenuGroup>
 
-              <MenuGroup title="Data" fold={fold} isCollapsed={isCollapsed}>
-                <MenuNav
-                  title="Manage Team"
-                  to="/team"
-                  icon={<PeopleOutlined />}
-                  selected={selected}
-                  setSelected={setSelected}
-                  isCollapsed ={isCollapsed}
-                />
-                <MenuNav
-                  title="Contacts Information"
-                  to="/contacts"
-                  icon={<ContactsOutlined />}
-                  selected={selected}
-                  setSelected={setSelected}
-                  isCollapsed ={isCollapsed}
-                />
-                <MenuNav
-                  title="Invoices Balances"
-                  to="/invoices"
-                  icon={<ReceiptOutlined />}
-                  selected={selected}
-                  setSelected={setSelected}
-                  isCollapsed ={isCollapsed}
-                />
-              </MenuGroup>
+            <MenuGroup title="Pages" isCollapsed={isCollapsed}>
+              <MenuNav
+                title="Profile Form"
+                to="/form"
+                icon={<PersonOutlined />}
+                selected={selected}
+                setSelected={setSelected}
+                isCollapsed ={isCollapsed}
+              />
+              <MenuNav
+                title="Calendar"
+                to="/calendar"
+                icon={<CalendarTodayOutlined />}
+                selected={selected}
+                setSelected={setSelected}
+                isCollapsed ={isCollapsed}
+              />
+              <MenuNav
+                title="FAQ Page"
+                to="/faq"
+                icon={<HelpOutlineOutlined />}
+                selected={selected}
+                setSelected={setSelected}
+                isCollapsed ={isCollapsed}
+              />
+            </MenuGroup>
 
-              <MenuGroup title="Pages" fold={fold} isCollapsed={isCollapsed}>
-                <MenuNav
-                  title="Profile Form"
-                  to="/form"
-                  icon={<PersonOutlined />}
-                  selected={selected}
-                  setSelected={setSelected}
-                  isCollapsed ={isCollapsed}
-                />
-                <MenuNav
-                  title="Calendar"
-                  to="/calendar"
-                  icon={<CalendarTodayOutlined />}
-                  selected={selected}
-                  setSelected={setSelected}
-                  isCollapsed ={isCollapsed}
-                />
-                <MenuNav
-                  title="FAQ Page"
-                  to="/faq"
-                  icon={<HelpOutlineOutlined />}
-                  selected={selected}
-                  setSelected={setSelected}
-                  isCollapsed ={isCollapsed}
-                />
-              </MenuGroup>
-
-              <MenuGroup title="Charts" fold={fold} isCollapsed={isCollapsed}>
-                <MenuNav
-                  title="Bar Chart"
-                  to="/bar"
-                  icon={<BarChartOutlined />}
-                  selected={selected}
-                  setSelected={setSelected}
-                  isCollapsed ={isCollapsed}
-                />
-                <MenuNav
-                  title="Pie Chart"
-                  to="/pie"
-                  icon={<PieChartOutlineOutlined />}
-                  selected={selected}
-                  setSelected={setSelected}
-                  isCollapsed ={isCollapsed}
-                />
-                <MenuNav
-                  title="Line Chart"
-                  to="/line"
-                  icon={<TimelineOutlined />}
-                  selected={selected}
-                  setSelected={setSelected}
-                  isCollapsed ={isCollapsed}
-                />
-                <MenuNav
-                  title="Geography Chart"
-                  to="/geography"
-                  icon={<MapOutlined />}
-                  selected={selected}
-                  setSelected={setSelected}
-                  isCollapsed ={isCollapsed}
-                />
-              </MenuGroup>
-
-              <MenuGroup title="Info" fold={fold} isCollapsed={isCollapsed}>
-                <MenuNav
-                  title="Bar Chart"
-                  to="/bar"
-                  icon={<BarChartOutlined />}
-                  selected={selected}
-                  setSelected={setSelected}
-                  isCollapsed ={isCollapsed}
-                />
-                <MenuNav
-                  title="Pie Chart"
-                  to="/pie"
-                  icon={<PieChartOutlineOutlined />}
-                  selected={selected}
-                  setSelected={setSelected}
-                  isCollapsed ={isCollapsed}
-                />
-                <MenuNav
-                  title="Line Chart"
-                  to="/line"
-                  icon={<TimelineOutlined />}
-                  selected={selected}
-                  setSelected={setSelected}
-                  isCollapsed ={isCollapsed}
-                />
-                <MenuNav
-                  title="Geography Chart"
-                  to="/geography"
-                  icon={<MapOutlined />}
-                  selected={selected}
-                  setSelected={setSelected}
-                  isCollapsed ={isCollapsed}
-                />
-              </MenuGroup>
-            </Box>
+            <MenuGroup title="Charts" isCollapsed={isCollapsed}>
+              <MenuNav
+                title="Bar Chart"
+                to="/bar"
+                icon={<BarChartOutlined />}
+                selected={selected}
+                setSelected={setSelected}
+                isCollapsed ={isCollapsed}
+              />
+              <MenuNav
+                title="Pie Chart"
+                to="/pie"
+                icon={<PieChartOutlineOutlined />}
+                selected={selected}
+                setSelected={setSelected}
+                isCollapsed ={isCollapsed}
+              />
+              <MenuNav
+                title="Line Chart"
+                to="/line"
+                icon={<TimelineOutlined />}
+                selected={selected}
+                setSelected={setSelected}
+                isCollapsed ={isCollapsed}
+              />
+              <MenuNav
+                title="Geography Chart"
+                to="/geography"
+                icon={<MapOutlined />}
+                selected={selected}
+                setSelected={setSelected}
+                isCollapsed ={isCollapsed}
+              />
+            </MenuGroup>
           </Box>
         </Menu>
       </Sidebar>
@@ -253,37 +207,14 @@ const SideBar = () => {
   )
 }
 
-const MenuGroup = ({children, title, fold, isCollapsed})=> {
+const MenuGroup = ({children, title, isCollapsed})=> {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
-    const [dropDown, setDropDown] = useState("");
-    const [showDropdown, setShowDropDown] = useState(false)
-
-    useEffect(()=>{
-      if (fold === true && !dropDown) {
-        setShowDropDown(false)
-      }
-      if (fold === true && dropDown) {
-        setShowDropDown(true)
-      }
-      if (fold === false && dropDown) {
-          setShowDropDown(false)
-        }
-      if (fold === false && !dropDown) {
-        setShowDropDown(true)
-      }
-    },[fold, dropDown])
+    const [dropDown, setDropDown] = useState(null);
 
     useEffect(()=> {
-      if (fold === false) {
-        setDropDown("")
-      }
-      if (fold === false && dropDown) {
-        setShowDropDown(true)
-      }
+      setDropDown(false)
     },[])
-
-    console.log(dropDown)
 
     return (
       <Box>
@@ -292,12 +223,12 @@ const MenuGroup = ({children, title, fold, isCollapsed})=> {
             display:'flex',
             alignItems:'center',
             justifyContent: isCollapsed ? "center" : "initial",
-            margin: fold && isCollapsed ? "0 0 0 10px": "0px 0 0px 15px",
+            margin: isCollapsed ? "0": "0px 0 0px 15px",
             textTransform: "capitalize",
             cursor: "pointer"
           }}
           onClick={()=> {
-            setDropDown(prev => prev === "" ? title : ""); 
+            setDropDown(!dropDown); 
           }}
         >
         <Typography
@@ -309,10 +240,10 @@ const MenuGroup = ({children, title, fold, isCollapsed})=> {
           {title}
         </Typography>
         <IconButton disableRipple>
-          { dropDown !== "" ? <ArrowDropUpOutlined/> : <ArrowDropDownOutlined/>}
+          { dropDown ? <ArrowDropUpOutlined/> : <ArrowDropDownOutlined/>}
         </IconButton>
         </List>
-        {showDropdown && <Box>  
+        {dropDown && <Box>  
           {children}
         </Box>}
         

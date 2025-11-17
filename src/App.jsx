@@ -15,14 +15,15 @@ import {
   Team,
   Calendar
 } from './scenes'
-import { useState } from 'react';
 
+const content = {
+  height: "72vh",
+  spacing: "10px"
+};
 
 
 function App() {
   const [theme, colorMode] = useMode();
-  const [isSidebar, setIsSidebar] = useState(true);
-
 
   return (
     <ColorModeContext.Provider value={colorMode}>
@@ -34,17 +35,17 @@ function App() {
             <Topbar/>
             <section className='main'>
             <Routes>
-              <Route path='/' element={<Dashboard />} />
-              <Route path='/contacts' element={<Contacts />} />
-              <Route path='/faq' element={<FAQ />} />
-              <Route path='/team' element={<Team />} />
-              <Route path='/invoices' element={<Invoices />} />
-              <Route path='/pie' element={<Pie />} />
-              <Route path='/form' element={<Form />} />
-              <Route path='/bar' element={<Bar />} />
-              <Route path='/line' element={<Line />} />
-              <Route path='/geography' element={<Geography/>} />
-              <Route path='/calendar' element={<Calendar/>} />
+              <Route path='/' element={<Dashboard  contentStyles={content}/>} />
+              <Route path='/contacts' element={<Contacts  contentStyles={content}/>} />
+              <Route path='/faq' element={<FAQ  contentStyles={content}/>} />
+              <Route path='/team' element={<Team  contentStyles={content}/>} />
+              <Route path='/invoices' element={<Invoices  contentStyles={content}/>} />
+              <Route path='/pie' element={<Pie  contentStyles={content}/>} />
+              <Route path='/form' element={<Form  contentStyles={content}/>} />
+              <Route path='/bar' element={<Bar  contentStyles={content}/>} />
+              <Route path='/line' element={<Line  contentStyles={content}/>} />
+              <Route path='/geography' element={<Geography contentStyles={content}/>} />
+              <Route path='/calendar' element={<Calendar contentStyles={content}/>} />
             </Routes>
             </section>
           </main>

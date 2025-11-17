@@ -3,7 +3,7 @@ import {GeographyChart, Header} from "../../components/global";
 import { tokens } from "../../theme";
 import { useEffect, useRef } from "react";
 
-const Geography = () => {
+const Geography = ({contentStyles}) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
@@ -28,11 +28,10 @@ const Geography = () => {
   }, [geoRef])
 
   return (
-    <Box m="20px" ref={geoRef}>
-      <Header title="Geography" subtitle="The World Geography Chart (Map) with Density Representation" />
+    <Box ref={geoRef}>
+      <Header title="Geography" subtitle="World Geography Chart with Density Representation" />
       <Box
-        height="75vh"
-        // width="100%"
+        height={contentStyles.height}
         border={`1px solid ${colors.grey[100]}`}
         borderRadius="4px"
         ref = {chartRef}

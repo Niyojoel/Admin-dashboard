@@ -17,7 +17,12 @@ const Topbar = () => {
   const colorMode = useContext(ColorModeContext);
 
   return (
-    <Box display="flex" justifyContent="space-between" p={2}>
+    <Box 
+      display="flex" 
+      height='8%' 
+      justifyContent="space-between" 
+      p={1}
+      >
       {/* SEARCH BAR */}
       <Box 
         display="flex" 

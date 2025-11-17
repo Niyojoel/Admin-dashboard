@@ -5,7 +5,7 @@ import {tokens} from "../../theme"
 import Header from '../../components/global/Header'
 import {mockDataTeam} from '../../data/mockData'
 
-const index = () => {
+const index = ({contentStyles}) => {
   const theme = useTheme()
   const colors = tokens(theme.palette.mode)
 
@@ -67,11 +67,10 @@ const index = () => {
   ]
 
   return (
-    <Box m="20px" fontFamily="Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif">
+    <Box fontFamily="Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif">
       <Header title="TEAM" subtitle="Managing the Team Members"/>
       <Box
-        mt="40px"
-        height="75vh"
+        height={contentStyles.height}
         sx={{
          '& .MuiDataGrid-root': {
             border: "none",

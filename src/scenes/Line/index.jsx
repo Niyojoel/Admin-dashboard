@@ -1,11 +1,11 @@
 import { Box } from "@mui/material";
 import {Header, LineChart} from "../../components/global";
 
-const Line = () => {
+const Line = ({contentStyles}) => {
   return (
-    <Box m="20px">
+    <Box>
       <Header title="Line Chart" subtitle="Simple and Representative Line Chart" />
-      <Box height="75vh">
+      <Box height={contentStyles.height}>
         <LineChart />
       </Box>
     </Box>

@@ -1,11 +1,11 @@
 import { Box } from "@mui/material"
 import { PieChart, Header } from "../../components/global"
 
-const index = () => {
+const index = ({contentStyles}) => {
   return (
-    <Box m="20px">
+    <Box>
       <Header title="PIE CHART" subtitle="Simple and Representative Pie Chart" />
-      <Box height="75vh">
+      <Box height={contentStyles.height}>
         <PieChart/>
       </Box>
     </Box>

@@ -16,7 +16,7 @@ import {
 import {Header} from '../../components/global';
 import { tokens } from "../../theme";
 
-const index = () => {
+const index = ({contentStyles}) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [currentEvents, setCurrentEvents] = useState([]);
@@ -44,11 +44,11 @@ const index = () => {
   }
 
   return (
-    <Box m="20px">
+    <Box>
       <Header title="CALENDAR" subtitle="Full Calendar Interactive Page"/>
-      <Box display="flex" justifyContent="space-between">
+      <Box display="flex" justifyContent="space-between" height={contentStyles.height}>
         <Box 
-          flex="1 1 20%" 
+          flex="1" 
           backgroundColor={colors.primary[400]}
           padding="15px"
           borderRadius= "4px"
@@ -62,8 +62,9 @@ const index = () => {
               key={event.id} 
               sx={{
                 backgroundColor: colors.greenAccent[500], 
-                m: "10px 0", 
-                borderRadius: "2px"
+                m: "7px 0", 
+                borderRadius: "2px",
+                padding: "0.2rem 1rem"
               }}
               >
                 <ListItemText
@@ -82,7 +83,7 @@ const index = () => {
             ))}
           </List>
         </Box>
-        <Box flex="1 1 100%" ml="15px">
+        <Box flex="5" ml="15px">
           <FullCalendar
             height="75vh"
             plugins= {[

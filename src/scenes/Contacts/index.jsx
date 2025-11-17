@@ -4,7 +4,7 @@ import {tokens} from "../../theme"
 import Header from '../../components/global/Header'
 import {mockDataContacts} from '../../data/mockData'
 
-const index = () => {
+const index = ({contentStyles}) => {
   const theme = useTheme()
   const colors = tokens(theme.palette.mode)
 
@@ -60,11 +60,10 @@ const index = () => {
   ]
 
   return (
-    <Box m="20px">
+    <Box>
       <Header title="CONTACTS" subtitle="The List of Contacts for Future Reference"/>
       <Box
-        mt="40px"
-        height="75vh"
+        height={contentStyles.height}
         sx={{
          '& .MuiDataGrid-root': {
             border: "none",

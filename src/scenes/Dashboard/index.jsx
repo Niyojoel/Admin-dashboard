@@ -7,7 +7,7 @@ import { BarChart, GeographyChart, LineChart, PieChart } from "../../components/
 import { DownloadOutlined, Email, PersonAdd, PointOfSale, Traffic } from "@mui/icons-material"
 import { useEffect, useState } from "react"
 
-const Dashboard = () => {
+const Dashboard = ({contentStyles}) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
@@ -15,8 +15,8 @@ const Dashboard = () => {
   const greyText = colors.grey[100]
 
   return (
-    <Box margin="20px">
-      <BoxSpaceBetween>
+    <Box>
+      <BoxSpaceBetween styles={{display:"flex", flexWrap:"wrap", marginBottom:"15px"}}>
         <Header title='DASHBOARD' subtitle='Welcome to your dashboard'/>
         <Box>
           <Button sx={{
@@ -24,9 +24,9 @@ const Dashboard = () => {
             color: greyText, 
             fontSize: '14px', 
             fontWeight:"bold", 
-            padding: "10px 20px"
+            padding: "8px 15px"
           }}>
-            <DownloadOutlined sx={{mr:"10px"}}/>
+          <DownloadOutlined sx={{mr: "8px"}}/>
             Download Reports
           </Button>
         </Box>
@@ -37,7 +37,8 @@ const Dashboard = () => {
         display="grid"
         gridTemplateColumns= "repeat(12, 1fr)"
         gridAutoRows="140px"
-        gap="20px"
+        gap={contentStyles.spacing}
+        height={contentStyles.height}
       >
         {/* FIRST ROW */}
         <BoxSpan span={3} display="flex">
@@ -214,7 +215,7 @@ const BoxSpan = ({children, span, rowSpan = 1, display="block", styles})=> {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
-  const isMobile = useMediaQuery("(max-width:620px)")
+  const isMobile = useMediaQuery("(max-width:700px)")
   const isLarge = useMediaQuery("(max-width:1200px)")
 
   const [widthSpan, setWidthSpan] = useState({
