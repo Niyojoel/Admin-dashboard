@@ -17,7 +17,7 @@ import {
 } from './scenes'
 
 const content = {
-  height: "72vh",
+  height: "72dvh",
   spacing: "10px"
 };
 
