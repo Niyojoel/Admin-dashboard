@@ -9,6 +9,7 @@ import {
   PersonOutlined, 
   Search
 } from "@mui/icons-material";
+import { useScreenSizeContext } from "../../context/useScreenSizeContext";
 
 
 const Topbar = () => {
@@ -16,12 +17,14 @@ const Topbar = () => {
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
 
+  const {isContainerSize} = useScreenSizeContext()
+
   return (
     <Box 
       display="flex" 
       height='8%' 
       justifyContent="space-between" 
-      p={1}
+      p={isContainerSize.s ? 1 : '1.2rem'}
       >
       {/* SEARCH BAR */}
       <Box 

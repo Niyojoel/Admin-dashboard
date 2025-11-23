@@ -3,8 +3,9 @@ import { DataGrid } from '@mui/x-data-grid'
 import {tokens} from "../../theme"
 import Header from '../../components/global/Header'
 import {mockDataInvoices} from '../../data/mockData'
+import { BoxWithHeight } from '../layout'
 
-const index = ({contentStyles}) => {
+const index = () => {
   const theme = useTheme()
   const colors = tokens(theme.palette.mode)
 
@@ -51,8 +52,7 @@ const index = ({contentStyles}) => {
   return (
     <Box>
       <Header title="INVOICES" subtitle="The List of Invoice Balances"/>
-      <Box
-        height={contentStyles.height}
+      <BoxWithHeight
         sx={{
          '& .MuiDataGrid-root': {
             border: "none",
@@ -95,7 +95,7 @@ const index = ({contentStyles}) => {
           rows={mockDataInvoices}
           columns={columns}
         />
-      </Box>
+      </BoxWithHeight>
     </Box>
   )
 }

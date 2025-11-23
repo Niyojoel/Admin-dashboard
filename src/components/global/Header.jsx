@@ -1,7 +1,7 @@
 import { Box, Typography, useTheme } from "@mui/material";
 import { tokens } from "../../theme";
 
-const Header = ({title, subtitle, style={height:"13dvh"}}) => {
+const Header = ({title, subtitle, style={height:"11dvh"}}) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   return (

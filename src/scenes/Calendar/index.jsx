@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import FullCalendar from "@fullcalendar/react";
 // import {formatDate} from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -15,8 +15,13 @@ import {
 } from "@mui/material";
 import {Header} from '../../components/global';
 import { tokens } from "../../theme";
+import { useScreenSizeContext } from "../../context/useScreenSizeContext";
+import { BoxWithHeight } from "../layout";
 
-const index = ({contentStyles}) => {
+const index = () => {
+  
+  const {isContainerSize} = useScreenSizeContext();
+
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [currentEvents, setCurrentEvents] = useState([]);
@@ -46,9 +51,16 @@ const index = ({contentStyles}) => {
   return (
     <Box>
       <Header title="CALENDAR" subtitle="Full Calendar Interactive Page"/>
-      <Box display="flex" justifyContent="space-between" height={contentStyles.height}>
+      {isContainerSize?.m !== null && <BoxWithHeight sx={
+        {
+          display: "flex", 
+          justifyContent: "space-between",
+          flexDirection: isContainerSize?.m ? "column" : 'row', 
+          gap: isContainerSize?.m || isContainerSize.l ? '1.5rem': '0px'
+        }
+      }>
         <Box 
-          flex="1" 
+          flex={isContainerSize?.l && "1"} 
           backgroundColor={colors.primary[400]}
           padding="15px"
           borderRadius= "4px"
@@ -56,15 +68,23 @@ const index = ({contentStyles}) => {
           <Typography variant="h5">
             Events
           </Typography>
-          <List>
+          <List sx={{
+            display: "flex",
+            m: "7px 0 0", 
+            flexDirection: isContainerSize?.m ? 'row': 'column', 
+            gap: "10px"
+          }}
+            
+            >
             {currentEvents.map(event=> (
               <ListItem 
               key={event.id} 
               sx={{
                 backgroundColor: colors.greenAccent[500], 
-                m: "7px 0", 
+                width:'fit-content',
                 borderRadius: "2px",
-                padding: "0.2rem 1rem"
+                padding: "0.2rem 1rem",
+                
               }}
               >
                 <ListItemText
@@ -111,7 +131,7 @@ const index = ({contentStyles}) => {
             ]}
           />
         </Box>
-      </Box>
+      </BoxWithHeight>}
     </Box>
   )
 }

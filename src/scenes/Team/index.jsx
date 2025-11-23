@@ -4,8 +4,9 @@ import { DataGrid } from '@mui/x-data-grid'
 import {tokens} from "../../theme"
 import Header from '../../components/global/Header'
 import {mockDataTeam} from '../../data/mockData'
+import { BoxWithHeight } from '../layout'
 
-const index = ({contentStyles}) => {
+const index = () => {
   const theme = useTheme()
   const colors = tokens(theme.palette.mode)
 
@@ -69,8 +70,7 @@ const index = ({contentStyles}) => {
   return (
     <Box fontFamily="Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif">
       <Header title="TEAM" subtitle="Managing the Team Members"/>
-      <Box
-        height={contentStyles.height}
+      <BoxWithHeight
         sx={{
          '& .MuiDataGrid-root': {
             border: "none",
@@ -106,7 +106,7 @@ const index = ({contentStyles}) => {
           rows={mockDataTeam}
           columns={columns}
         />
-      </Box>
+      </BoxWithHeight>
     </Box>
   )
 }

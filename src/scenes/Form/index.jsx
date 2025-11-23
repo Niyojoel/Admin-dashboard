@@ -1,9 +1,11 @@
 import React from "react";
 import {Formik} from "formik";
 import * as yup from "yup"
-import useMediaQuery from "@mui/material/useMediaQuery"
 import { Box, Button, TextField } from "@mui/material";
 import Header from "../../components/global/Header";
+import {useScreenSizeContext} from "../../context/useScreenSizeContext";
+import contentStyles from "../../utils/genericSceneStyles"
+import { BoxWithHeight } from "../layout";
 
 const initialValues = {
   firstName: "",
@@ -29,8 +31,8 @@ const userSchema = yup.object().shape({
   address2: yup.string().required("required"),
 });
 
-const index = ({contentStyles}) => {
-  const isNonMobile = useMediaQuery("(min-width:620px)");
+const index = () => {
+  const {isContainerSize} = useScreenSizeContext();
 
   const handleFormSubmit = (values)=> {
     console.log(values);
@@ -46,14 +48,18 @@ const index = ({contentStyles}) => {
       >
         {({values, errors, touched, handleBlur, handleChange, handleSubmit }) => (
           <form onSubmit={handleSubmit}>
-            <Box height={contentStyles.height} display="flex" flexDirection="column" justifyContent='space-between'>
+            <BoxWithHeight sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: '1rem'
+            }}>
               <Box 
                 display="grid" 
                 gap={contentStyles.spacing}
                 gridTemplateColumns="repeat(4, minmax(0, 1fr))"
                 sx={{
                   "& > div": {
-                    gridColumn: isNonMobile ? undefined : "span 4"
+                    gridColumn: isContainerSize.m ? "span 4" : undefined
                   }
                 }}
               >
@@ -141,12 +147,12 @@ const index = ({contentStyles}) => {
                   sx={{gridColumn: "span 4"}}
                 />
               </Box>
-              <Box display="flex" justifyContent="center" margin="10px 0 20px" sx={{gridColumn: "span 4"}}>
+              <Box display="flex" justifyContent="center" alignItems="start" margin="10px 0 20px" sx={{gridColumn: "span 4"}}>
                 <Button type="submit" color="secondary" variant="contained" sx={{padding: "6px 20px", width: "100%", fontSize: "18px", background:"#ddd"}}>
                   Create User
                 </Button>
               </Box>
-            </Box>
+            </BoxWithHeight>
           </form>
         )}
       </Formik>

@@ -1,13 +1,14 @@
 import { Box } from "@mui/material"
 import { BarChart, Header } from "../../components/global"
+import { BoxWithHeight } from "../layout"
 
-const index = ({contentStyles}) => {
+const index = () => {
   return (
     <Box >
       <Header title="BAR CHART" subtitle="Simple and Representative Bar Chart" />
-      <Box height= {contentStyles.height}>
+      <BoxWithHeight>
         <BarChart/>
-      </Box>
+      </BoxWithHeight>
     </Box>
   )
 }

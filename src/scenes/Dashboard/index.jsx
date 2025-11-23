@@ -3,11 +3,17 @@ import Header from "../../components/global/Header"
 import {ProgressPie, StatBox } from "../../components"
 import { mockTransactions } from "../../data/mockData"
 import { tokens } from "../../theme"
-import { BarChart, GeographyChart, LineChart, PieChart } from "../../components/global"
+import { BarChart, GeographyChart, LineChart} from "../../components/global"
 import { DownloadOutlined, Email, PersonAdd, PointOfSale, Traffic } from "@mui/icons-material"
 import { useEffect, useState } from "react"
+import { useScreenSizeContext } from "../../context/useScreenSizeContext"
+import { BoxWithHeight } from "../layout"
+import contentStyles from "../../utils/genericSceneStyles"
 
-const Dashboard = ({contentStyles}) => {
+const Dashboard = () => {
+
+  const {isContainerSize} = useScreenSizeContext();
+  
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
@@ -16,15 +22,17 @@ const Dashboard = ({contentStyles}) => {
 
   return (
     <Box>
-      <BoxSpaceBetween styles={{display:"flex", flexWrap:"wrap", marginBottom:"15px"}}>
+      <BoxSpaceBetween styles={{display:"flex", flexWrap:"wrap", alignItems:"center"}}>
         <Header title='DASHBOARD' subtitle='Welcome to your dashboard'/>
+        {/* Download report button */}
         <Box>
           <Button sx={{
             backgroundColor: colors.blueAccent[700], 
             color: greyText, 
             fontSize: '14px', 
             fontWeight:"bold", 
-            padding: "8px 15px"
+            padding: "8px 12px",
+            marginBottom: isContainerSize.s && contentStyles.spacing
           }}>
           <DownloadOutlined sx={{mr: "8px"}}/>
             Download Reports
@@ -33,13 +41,12 @@ const Dashboard = ({contentStyles}) => {
       </BoxSpaceBetween>
 
       {/* GRIDS AND CHARTS */}
-      <Box
-        display="grid"
-        gridTemplateColumns= "repeat(12, 1fr)"
-        gridAutoRows="140px"
-        gap={contentStyles.spacing}
-        height={contentStyles.height}
-      >
+      <BoxWithHeight sx={{
+        display:"grid",
+        gridTemplateColumns: "repeat(12, 1fr)",
+        gridAutoRows:"140px",
+        gap: contentStyles.spacing
+      }}>
         {/* FIRST ROW */}
         <BoxSpan span={3} display="flex">
           <StatBox 
@@ -206,7 +213,7 @@ const Dashboard = ({contentStyles}) => {
             <GeographyChart isDashboard={true}/>
           </Box>
         </BoxSpan>
-      </Box>
+      </BoxWithHeight>
     </Box>
   )
 }
@@ -214,9 +221,7 @@ const Dashboard = ({contentStyles}) => {
 const BoxSpan = ({children, span, rowSpan = 1, display="block", styles})=> {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-
-  const isMobile = useMediaQuery("(max-width:700px)")
-  const isLarge = useMediaQuery("(max-width:1200px)")
+  const {isContainerSize} = useScreenSizeContext();
 
   const [widthSpan, setWidthSpan] = useState({
     l: "",
@@ -238,7 +243,7 @@ const BoxSpan = ({children, span, rowSpan = 1, display="block", styles})=> {
   return (
     widthSpan.xl &&
     <Box
-      gridColumn={isMobile ? "span 12" : isLarge ? widthSpan.l : widthSpan.xl}
+      gridColumn={isContainerSize.s ? "span 12" : isContainerSize.m ? widthSpan.l : widthSpan.xl}
       gridRow={`span ${rowSpan}`}
       backgroundColor={colors.primary[400]}
       display={display}

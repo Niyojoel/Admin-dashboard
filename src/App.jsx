@@ -1,4 +1,5 @@
 import {Routes, Route} from 'react-router-dom';
+import { useEffect, useRef} from 'react';
 import {ColorModeContext, useMode} from './theme';
 import {CssBaseline, ThemeProvider} from '@mui/material';
 import {Topbar, Sidebar} from './scenes/layout'
@@ -15,37 +16,40 @@ import {
   Team,
   Calendar
 } from './scenes'
-
-const content = {
-  height: "72dvh",
-  spacing: "10px"
-};
-
+import { useScreenSizeContext } from './context/useScreenSizeContext';
 
 function App() {
+
   const [theme, colorMode] = useMode();
+  const {observeContainerSize} = useScreenSizeContext();
+
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    observeContainerSize(containerRef);
+  },[containerRef])
 
   return (
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
         <CssBaseline/>
         <div className="app">
-          <Sidebar />
+          <Sidebar/>
           <main className="content">
             <Topbar/>
-            <section className='main'>
+            <section className='main' ref={containerRef}>
             <Routes>
-              <Route path='/' element={<Dashboard  contentStyles={content}/>} />
-              <Route path='/contacts' element={<Contacts  contentStyles={content}/>} />
-              <Route path='/faq' element={<FAQ  contentStyles={content}/>} />
-              <Route path='/team' element={<Team  contentStyles={content}/>} />
-              <Route path='/invoices' element={<Invoices  contentStyles={content}/>} />
-              <Route path='/pie' element={<Pie  contentStyles={content}/>} />
-              <Route path='/form' element={<Form  contentStyles={content}/>} />
-              <Route path='/bar' element={<Bar  contentStyles={content}/>} />
-              <Route path='/line' element={<Line  contentStyles={content}/>} />
-              <Route path='/geography' element={<Geography contentStyles={content}/>} />
-              <Route path='/calendar' element={<Calendar contentStyles={content}/>} />
+              <Route path='/' element={<Dashboard />} />
+              <Route path='/contacts' element={<Contacts />} />
+              <Route path='/faq' element={<FAQ />} />
+              <Route path='/team' element={<Team />} />
+              <Route path='/invoices' element={<Invoices />} />
+              <Route path='/pie' element={<Pie />} />
+              <Route path='/form' element={<Form />} />
+              <Route path='/bar' element={<Bar />} />
+              <Route path='/line' element={<Line />} />
+              <Route path='/geography' element={<Geography/>} />
+              <Route path='/calendar' element={<Calendar />} />
             </Routes>
             </section>
           </main>

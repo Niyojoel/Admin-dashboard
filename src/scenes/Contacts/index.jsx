@@ -3,8 +3,10 @@ import { DataGrid, GridToolbar} from '@mui/x-data-grid'
 import {tokens} from "../../theme"
 import Header from '../../components/global/Header'
 import {mockDataContacts} from '../../data/mockData'
+import { BoxWithHeight } from '../layout'
 
-const index = ({contentStyles}) => {
+
+const index = () => {
   const theme = useTheme()
   const colors = tokens(theme.palette.mode)
 
@@ -62,8 +64,7 @@ const index = ({contentStyles}) => {
   return (
     <Box>
       <Header title="CONTACTS" subtitle="The List of Contacts for Future Reference"/>
-      <Box
-        height={contentStyles.height}
+      <BoxWithHeight
         sx={{
          '& .MuiDataGrid-root': {
             border: "none",
@@ -105,7 +106,7 @@ const index = ({contentStyles}) => {
           columns={columns}
           slots={{toolbar: GridToolbar}}
         />
-      </Box>
+      </BoxWithHeight>
     </Box>
   )
 }

@@ -10,15 +10,15 @@ const MenuNav = ({title, to, icon, selected, setSelected, isCollapsed}) => {
   
   return (
     <MenuItem
-      active = {selected === title}
+      active = {title == selected }
       style={{
         backgroundColor: 'transparent',
         color: colors.grey[100],
         marginLeft: !isCollapsed ? "-15px" : "0",
       }}
       onClick={() => {
-        setSelected(title); 
-        navigate(to);
+        setSelected(title);
+        navigate(to)
       }}
       icon={icon}
     >

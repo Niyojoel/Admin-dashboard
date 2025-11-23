@@ -1,37 +1,54 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Sidebar, Menu, MenuItem } from "react-pro-sidebar";
 import { Box, IconButton, List, Typography, useTheme } from "@mui/material";
 import { tokens } from "../../theme";
 import {
-  HomeOutlined, 
-  PeopleOutlined, 
-  ContactsOutlined, 
-  ReceiptOutlined, 
-  PersonOutlined, 
-  CalendarTodayOutlined, 
-  HelpOutlineOutlined, 
-  BarChartOutlined, 
-  PieChartOutlineOutlined, 
-  TimelineOutlined, 
-  MenuOutlined, 
-  MapOutlined,
+  ArrowDropDownOutlined,
   ArrowDropUpOutlined,
-  ArrowDropDownOutlined
+  HomeOutlined, 
+  MenuOutlined, 
 } from "@mui/icons-material";
 import { MenuNav } from "../../components";
+import { useHref } from "react-router-dom";
+import { menus } from "../../data/navMenu";
+import { useScreenSizeContext } from "../../context/useScreenSizeContext";
 
 const SideBar = () => {
+
+  const {isMobileScreen} = useScreenSizeContext();
+  
   const theme = useTheme();
+  const [selected, setSelected] = useState("");
+  const [toggledMenu, setToggledMenu] = useState("");
   const colors = tokens(theme.palette.mode);
-  const [selected, setSelected] = useState("index");
   const [isCollapsed, setIsCollapsed] = useState(false);
 
-  const menusRef = useRef(null);
+  const pathname = useHref();
+
+  useEffect(()=> {
+    let lastSelectedTitle;
+
+    menus.forEach(menu => menu.navs.forEach(nav => {
+      if(nav.to == pathname) {
+        lastSelectedTitle = nav.title;
+      }
+      return;
+    }));
+    console.log(lastSelectedTitle);
+
+    selected == "" && setSelected(pathname.trim().length ? lastSelectedTitle : 'dashboard');
+  },[pathname])
 
   return (
     <Box
-      position="sticky"
+      position={isMobileScreen && !isCollapsed ? "absolute" : "sticky"}
+      width={isMobileScreen && !isCollapsed ? "100%" : "fit-content"}
+      display='flex'
+      height="100dvh"
+      bgcolor={'rgba(255, 255, 255, 0.1)'}
+      zIndex={isMobileScreen && !isCollapsed ? "10" : "initial"}
       sx={{
+        backdropFilter:'blur(2.5px) saturate(100%)',
         "& .ps-menu-button:hover": {
           color: "#868dfb !important",
         },
@@ -39,12 +56,11 @@ const SideBar = () => {
           color: "#6870fa !important",
         },
       }}
-      ref={menusRef}
     >
       <Sidebar 
         collapsed={isCollapsed} 
         backgroundColor={colors.primary[400]}
-        style={{border: "none"}}
+        style={{border: "none", zIndex: isMobileScreen && !isCollapsed ? "12" : "initial"}} 
       >
         <Menu>
           {/* LOGO AND MENU ICON */}
@@ -97,8 +113,7 @@ const SideBar = () => {
           </Box>
           {/* MENUS */}
           <Box 
-            ref={menusRef} 
-            height={isCollapsed ? "90.5dvh" : "60.7dvh"}
+            height={isCollapsed ? "91.8dvh" : "64.7dvh"}
             overflow="auto" 
             padding={isCollapsed ? undefined : "3% 0 3% 10%"}
             borderTop={`1px solid ${colors.primary[500]}`}
@@ -112,109 +127,58 @@ const SideBar = () => {
               isCollapsed ={isCollapsed}
             />
 
-            <MenuGroup title="Data" isCollapsed={isCollapsed}>
-              <MenuNav
-                title="Manage Team"
-                to="/team"
-                icon={<PeopleOutlined />}
-                selected={selected}
-                setSelected={setSelected}
-                isCollapsed ={isCollapsed}
-              />
-              <MenuNav
-                title="Contacts Information"
-                to="/contacts"
-                icon={<ContactsOutlined />}
-                selected={selected}
-                setSelected={setSelected}
-                isCollapsed ={isCollapsed}
-              />
-              <MenuNav
-                title="Invoices Balances"
-                to="/invoices"
-                icon={<ReceiptOutlined />}
-                selected={selected}
-                setSelected={setSelected}
-                isCollapsed ={isCollapsed}
-              />
-            </MenuGroup>
-
-            <MenuGroup title="Pages" isCollapsed={isCollapsed}>
-              <MenuNav
-                title="Profile Form"
-                to="/form"
-                icon={<PersonOutlined />}
-                selected={selected}
-                setSelected={setSelected}
-                isCollapsed ={isCollapsed}
-              />
-              <MenuNav
-                title="Calendar"
-                to="/calendar"
-                icon={<CalendarTodayOutlined />}
-                selected={selected}
-                setSelected={setSelected}
-                isCollapsed ={isCollapsed}
-              />
-              <MenuNav
-                title="FAQ Page"
-                to="/faq"
-                icon={<HelpOutlineOutlined />}
-                selected={selected}
-                setSelected={setSelected}
-                isCollapsed ={isCollapsed}
-              />
-            </MenuGroup>
-
-            <MenuGroup title="Charts" isCollapsed={isCollapsed}>
-              <MenuNav
-                title="Bar Chart"
-                to="/bar"
-                icon={<BarChartOutlined />}
-                selected={selected}
-                setSelected={setSelected}
-                isCollapsed ={isCollapsed}
-              />
-              <MenuNav
-                title="Pie Chart"
-                to="/pie"
-                icon={<PieChartOutlineOutlined />}
-                selected={selected}
-                setSelected={setSelected}
-                isCollapsed ={isCollapsed}
-              />
-              <MenuNav
-                title="Line Chart"
-                to="/line"
-                icon={<TimelineOutlined />}
-                selected={selected}
-                setSelected={setSelected}
-                isCollapsed ={isCollapsed}
-              />
-              <MenuNav
-                title="Geography Chart"
-                to="/geography"
-                icon={<MapOutlined />}
-                selected={selected}
-                setSelected={setSelected}
-                isCollapsed ={isCollapsed}
-              />
-            </MenuGroup>
+            {menus?.map(menu => (
+            <MenuGroup
+              key={menu.groupTag}
+              tag={menu.groupTag} 
+              isCollapsed={isCollapsed} 
+              toggledMenu={toggledMenu} 
+              setToggledMenu={setToggledMenu}
+              selected={selected}
+            >
+              {menu?.navs?.map(nav =>(
+                <MenuNav
+                  key={nav.title}
+                  title={nav.title}
+                  to={nav.to}
+                  icon={nav.icon}
+                  selected={selected}
+                  setSelected={setSelected}
+                  isCollapsed ={isCollapsed}
+                />
+              ))}
+            </MenuGroup>))}
           </Box>
         </Menu>
       </Sidebar>
+      <Box 
+        display={isMobileScreen && !isCollapsed ? 'flex' : 'none'} 
+        flex={1} 
+        onClick={()=> setIsCollapsed(true)}/>
     </Box>
   )
 }
 
-const MenuGroup = ({children, title, isCollapsed})=> {
+
+const MenuGroup = ({children, tag, isCollapsed, toggledMenu, selected, setToggledMenu})=> {
+
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
-    const [dropDown, setDropDown] = useState(null);
+    const [dropDown, setDropDown] = useState(false);
+    const [activeMenuGroupTag, setActiveMenuGroupTag] = useState('');
 
     useEffect(()=> {
-      setDropDown(false)
-    },[])
+      isCollapsed && setToggledMenu('')
+    }, [isCollapsed])
+
+    useEffect(()=> {
+      setDropDown(toggledMenu === tag ? true : false) 
+    }, [toggledMenu]);
+
+    useEffect(()=> {
+      const activeGroupTag = menus.find(menu => menu.navs.find(nav => (nav?.title?.toLowerCase() == selected?.toLowerCase())))?.groupTag;
+      setActiveMenuGroupTag(activeGroupTag)
+    }, [menus, selected])
 
     return (
       <Box>
@@ -223,21 +187,19 @@ const MenuGroup = ({children, title, isCollapsed})=> {
             display:'flex',
             alignItems:'center',
             justifyContent: isCollapsed ? "center" : "initial",
-            margin: isCollapsed ? "0": "0px 0 0px 15px",
+            margin: isCollapsed ? "0px 0 0px 10px": "0px 0 0px 15px",
             textTransform: "capitalize",
-            cursor: "pointer"
+            cursor: "pointer",
           }}
-          onClick={()=> {
-            setDropDown(!dropDown); 
-          }}
+          onClick={()=>setToggledMenu(dropDown ? "" : tag)}
         >
         <Typography
           variant="h6"
-          color={colors.grey[300]}
-          marginRight="-5px"
-          letterSpacing={!isCollapsed && "1px"}
+          color={tag === activeMenuGroupTag ? colors.blueAccent[400] : colors.grey[200]}
+          marginRight="-8px"
+          fontWeight={"normal"}
         >  
-          {title}
+          {tag}
         </Typography>
         <IconButton disableRipple>
           { dropDown ? <ArrowDropUpOutlined/> : <ArrowDropDownOutlined/>}
