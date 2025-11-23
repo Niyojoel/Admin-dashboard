@@ -34,11 +34,12 @@ const SideBar = () => {
       }
       return;
     }));
-    console.log(lastSelectedTitle);
 
-    selected == "" && setSelected(pathname.trim().length ? lastSelectedTitle : 'dashboard');
-  },[pathname])
+    selected == "" && setSelected(pathname != '/' ? lastSelectedTitle : 'dashboard');
+  },[pathname, selected])
 
+  console.log(selected)
+  console.log(pathname)
   return (
     <Box
       position={isMobileScreen && !isCollapsed ? "absolute" : "sticky"}

@@ -10,7 +10,7 @@ const MenuNav = ({title, to, icon, selected, setSelected, isCollapsed}) => {
   
   return (
     <MenuItem
-      active = {title == selected }
+      active = {title?.toLowerCase() == selected?.toLowerCase() }
       style={{
         backgroundColor: 'transparent',
         color: colors.grey[100],
