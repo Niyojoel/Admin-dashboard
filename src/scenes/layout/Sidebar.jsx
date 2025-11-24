@@ -21,7 +21,7 @@ const SideBar = () => {
   const [selected, setSelected] = useState("");
   const [toggledMenu, setToggledMenu] = useState("");
   const colors = tokens(theme.palette.mode);
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true);
 
   const pathname = useHref();
 
