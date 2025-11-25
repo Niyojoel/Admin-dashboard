@@ -1,5 +1,5 @@
 import { useMediaQuery } from "@mui/material";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 const ScreenSizeContext = createContext(null);
 
@@ -16,6 +16,9 @@ export const ScreenSizeProvider = ({children}) => {
   const CONTAINER_BIGSIZE = 1200;
   
   const [isContainerSize, setIsContainerSize] = useState({s: null, m: null, l: null})
+  const [isCollapsed, setIsCollapsed] = useState(true);
+  const [hideSidebar, setHideSidebar] = useState(null);
+
 
   const getContainerSize = (container) => {
     const containerWidth = container.clientWidth;
@@ -25,6 +28,10 @@ export const ScreenSizeProvider = ({children}) => {
       l: containerWidth > CONTAINER_BIGSIZE,
     })
   }
+
+  const toggleSidebar = () => setIsCollapsed(!isCollapsed)
+
+  const retractSidebar = () => setIsCollapsed(true)
 
   const observeContainerSize = (containerRef, observerAction = getContainerSize) => {
     if(containerRef.current == null) return;
@@ -42,7 +49,11 @@ export const ScreenSizeProvider = ({children}) => {
       }
   }
 
-    return <ScreenSizeContext.Provider value={{isMobileScreen, isContainerSize, observeContainerSize}}>{children}</ScreenSizeContext.Provider>
+  useEffect(()=> {
+    setHideSidebar(isMobileScreen && isCollapsed)
+  }, [isMobileScreen, isCollapsed])
+
+  return <ScreenSizeContext.Provider value={{isMobileScreen, isContainerSize, observeContainerSize, isCollapsed, toggleSidebar, hideSidebar, retractSidebar}}>{children}</ScreenSizeContext.Provider>
 } 
 
 export const useScreenSizeContext = () => {

@@ -12,22 +12,24 @@ import { MenuNav } from "../../components";
 import { useHref } from "react-router-dom";
 import { menus } from "../../data/navMenu";
 import { useScreenSizeContext } from "../../context/useScreenSizeContext";
+import CollapseBtn from "./CollapseBtn";
+
 
 const SideBar = () => {
 
-  const {isMobileScreen} = useScreenSizeContext();
+  const {isMobileScreen, isCollapsed, toggleSidebar, hideSidebar, retractSidebar} = useScreenSizeContext();
   
   const theme = useTheme();
   const [selected, setSelected] = useState("");
   const [toggledMenu, setToggledMenu] = useState("");
   const colors = tokens(theme.palette.mode);
-  const [isCollapsed, setIsCollapsed] = useState(true);
 
   const pathname = useHref();
 
   useEffect(()=> {
     let lastSelectedTitle;
 
+    // use reduce
     menus.forEach(menu => menu.navs.forEach(nav => {
       if(nav.to == pathname) {
         lastSelectedTitle = nav.title;
@@ -40,14 +42,17 @@ const SideBar = () => {
 
   console.log(selected)
   console.log(pathname)
+
   return (
     <Box
-      position={isMobileScreen && !isCollapsed ? "absolute" : "sticky"}
-      width={isMobileScreen && !isCollapsed ? "100%" : "fit-content"}
+      position={isMobileScreen ? "absolute" : "sticky"}
       display='flex'
       height="100dvh"
+      width={isMobileScreen ? isCollapsed ? "0" : "100%" :'fit-content' }
+      overflowX={hideSidebar ? "hidden" : "initial"}
+      overflowY="hidden"
       bgcolor={'rgba(255, 255, 255, 0.1)'}
-      zIndex={isMobileScreen && !isCollapsed ? "10" : "initial"}
+      zIndex={isMobileScreen ? "10" : "initial"}
       sx={{
         backdropFilter:'blur(2.5px) saturate(100%)',
         "& .ps-menu-button:hover": {
@@ -55,47 +60,58 @@ const SideBar = () => {
         },
         "& .ps-active": {
           color: "#6870fa !important",
-        },
+        },          
+        transform: hideSidebar ? "translateX(-100%)" : "translateX(0)",
+        visibility: isMobileScreen && isCollapsed ? "hidden" : "visible",
       }}
     >
       <Sidebar 
         collapsed={isCollapsed} 
         backgroundColor={colors.primary[400]}
-        style={{border: "none", zIndex: isMobileScreen && !isCollapsed ? "12" : "initial"}} 
+        style={{
+          border: "none", 
+          transform: hideSidebar ? "translateX(-100%)" : "translateX(0)",
+          overflow: "hidden",
+        }} 
       >
         <Menu>
           {/* LOGO AND MENU ICON */}
           <Box>
             <MenuItem 
-              onClick={() => setIsCollapsed(!isCollapsed)}
+              onClick={toggleSidebar}
               icon={isCollapsed ? <MenuOutlined /> : undefined}
               style={{
                 backgroundColor: 'transparent',
-                margin: "0.45rem 0 0 0",
+                margin: "0",
                 color: colors.grey[100],
-                height: "2.55rem",
+                height: "8dvh",
+                borderBottom: `1px solid ${colors.primary[600]}`,
+                transition: "100ms all ease-in-out"
               }}
             >
-              {!isCollapsed && (
+              {(
                 <Box
                   display="flex"
                   justifyContent="space-between"
                   alignItems="center"
                   ml="15px"
+                  visibility={isCollapsed ? "hidden" : "visible"}
+                  sx={{
+                    transition: "100ms all ease-in-out"
+                  }}
+                  
                 >
                   <Typography variant="h3" color={colors.grey[100]}>
                     ADMINS
                   </Typography>
-                  <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
-                    <MenuOutlined />
-                  </IconButton>
+                  <CollapseBtn/>
                 </Box>
               )}
             </MenuItem>
 
             {/* USER */}
-            {!isCollapsed && (
-              <Box padding ="1.3rem 0">
+            {(
+              <Box height={isCollapsed ? "0px" : "27.3dvh"} display="flex" flexDirection="column" justifyContent="center" sx={{transition: "100ms all ease-in-out", overflow: 'hidden', visibility: isCollapsed ? "hidden" : "visible"}}>
                 <Box display="flex" justifyContent="center" alignItems="center">
                   <img 
                     src="../../assets/user.png" 
@@ -115,9 +131,11 @@ const SideBar = () => {
           {/* MENUS */}
           <Box 
             height={isCollapsed ? "91.8dvh" : "64.7dvh"}
-            overflow="auto" 
+            overflowY="auto" 
             padding={isCollapsed ? undefined : "3% 0 3% 10%"}
             borderTop={`1px solid ${colors.primary[500]}`}
+            overflowX = 'hidden'
+            sx={{transition: "100ms all ease-in-out"}}
           >
             <MenuNav
               title="Dashboard"
@@ -125,7 +143,7 @@ const SideBar = () => {
               icon={<HomeOutlined />}
               selected={selected}
               setSelected={setSelected}
-              isCollapsed ={isCollapsed}
+              isCollapsed = {isCollapsed}
             />
 
             {menus?.map(menu => (
@@ -155,7 +173,7 @@ const SideBar = () => {
       <Box 
         display={isMobileScreen && !isCollapsed ? 'flex' : 'none'} 
         flex={1} 
-        onClick={()=> setIsCollapsed(true)}/>
+        onClick={retractSidebar}/>
     </Box>
   )
 }

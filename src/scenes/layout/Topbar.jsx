@@ -10,6 +10,7 @@ import {
   Search
 } from "@mui/icons-material";
 import { useScreenSizeContext } from "../../context/useScreenSizeContext";
+import CollapseBtn from "./CollapseBtn";
 
 
 const Topbar = () => {
@@ -17,25 +18,31 @@ const Topbar = () => {
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
 
-  const {isContainerSize} = useScreenSizeContext()
+  const {isContainerSize, isMobileScreen, isCollapsed} = useScreenSizeContext()
 
   return (
     <Box 
       display="flex" 
       height='8%' 
       justifyContent="space-between" 
-      p={isContainerSize.s ? 1 : '1.2rem'}
-      >
+      p={isContainerSize.s ? 1 : '10px 1.2rem'}
+    >
       {/* SEARCH BAR */}
       <Box 
-        display="flex" 
-        backgroundColor={colors.primary[400]}
-        borderRadius="3px"
+        display="flex"
+        gap="1rem" 
       >
-        <InputBase sx={{ml: 2, flex: 1}} placeholder="Search"/>
-        <IconButton type="button" sx={{ p: 1}}>
-          <Search/>
-        </IconButton>
+        {(isMobileScreen) && <CollapseBtn />}
+        <Box 
+          display="flex" 
+          backgroundColor={colors.primary[400]}
+          borderRadius="3px"
+        >
+          <InputBase sx={{ml: 2, flex: "1"}} placeholder="Search"/>
+          <IconButton type="button" sx={{ p: 1}}>
+            <Search/>
+          </IconButton>
+        </Box>
       </Box>
 
       <Box display="flex">
