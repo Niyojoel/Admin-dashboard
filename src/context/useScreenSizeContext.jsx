@@ -17,8 +17,6 @@ export const ScreenSizeProvider = ({children}) => {
   
   const [isContainerSize, setIsContainerSize] = useState({s: null, m: null, l: null})
   const [isCollapsed, setIsCollapsed] = useState(true);
-  const [hideSidebar, setHideSidebar] = useState(null);
-
 
   const getContainerSize = (container) => {
     const containerWidth = container.clientWidth;
@@ -31,7 +29,7 @@ export const ScreenSizeProvider = ({children}) => {
 
   const toggleSidebar = () => setIsCollapsed(!isCollapsed)
 
-  const retractSidebar = () => setIsCollapsed(true)
+  const collapseSidebar = () => setIsCollapsed(true)
 
   const observeContainerSize = (containerRef, observerAction = getContainerSize) => {
     if(containerRef.current == null) return;
@@ -49,11 +47,7 @@ export const ScreenSizeProvider = ({children}) => {
       }
   }
 
-  useEffect(()=> {
-    setHideSidebar(isMobileScreen && isCollapsed)
-  }, [isMobileScreen, isCollapsed])
-
-  return <ScreenSizeContext.Provider value={{isMobileScreen, isContainerSize, observeContainerSize, isCollapsed, toggleSidebar, hideSidebar, retractSidebar}}>{children}</ScreenSizeContext.Provider>
+  return <ScreenSizeContext.Provider value={{isMobileScreen, isContainerSize, observeContainerSize, isCollapsed, toggleSidebar, collapseSidebar}}>{children}</ScreenSizeContext.Provider>
 } 
 
 export const useScreenSizeContext = () => {

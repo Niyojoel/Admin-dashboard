@@ -17,12 +17,13 @@ import CollapseBtn from "./CollapseBtn";
 
 const SideBar = () => {
 
-  const {isMobileScreen, isCollapsed, toggleSidebar, hideSidebar, retractSidebar} = useScreenSizeContext();
+  const {isMobileScreen, isCollapsed, toggleSidebar, collapseSidebar} = useScreenSizeContext();
   
   const theme = useTheme();
   const [selected, setSelected] = useState("");
   const [toggledMenu, setToggledMenu] = useState("");
   const colors = tokens(theme.palette.mode);
+  const [mobileSidebarCollapsed, setMobileSidebarCollapsed] = useState(true);
 
   const pathname = useHref();
 
@@ -40,6 +41,10 @@ const SideBar = () => {
     selected == "" && setSelected(pathname != '/' ? lastSelectedTitle : 'dashboard');
   },[pathname, selected])
 
+  useEffect(()=> {
+  setMobileSidebarCollapsed(isMobileScreen && isCollapsed)
+}, [isMobileScreen, isCollapsed])
+
   console.log(selected)
   console.log(pathname)
 
@@ -49,8 +54,6 @@ const SideBar = () => {
       display='flex'
       height="100dvh"
       width={isMobileScreen ? isCollapsed ? "0" : "100%" :'fit-content' }
-      overflowX={hideSidebar ? "hidden" : "initial"}
-      overflowY="hidden"
       bgcolor={'rgba(255, 255, 255, 0.1)'}
       zIndex={isMobileScreen ? "10" : "initial"}
       sx={{
@@ -61,17 +64,18 @@ const SideBar = () => {
         "& .ps-active": {
           color: "#6870fa !important",
         },          
-        transform: hideSidebar ? "translateX(-100%)" : "translateX(0)",
-        visibility: isMobileScreen && isCollapsed ? "hidden" : "visible",
       }}
     >
       <Sidebar 
-        collapsed={isCollapsed} 
+        collapsed={isCollapsed && !isMobileScreen} 
         backgroundColor={colors.primary[400]}
         style={{
           border: "none", 
-          transform: hideSidebar ? "translateX(-100%)" : "translateX(0)",
+          transform: mobileSidebarCollapsed
+          ? "translateX(-100%)" 
+          : "translateX(0)",
           overflow: "hidden",
+          transition: "200ms all ease-in-out",
         }} 
       >
         <Menu>
@@ -85,8 +89,7 @@ const SideBar = () => {
                 margin: "0",
                 color: colors.grey[100],
                 height: "8dvh",
-                borderBottom: `1px solid ${colors.primary[600]}`,
-                transition: "100ms all ease-in-out"
+                borderBottom: `0.5px solid ${colors.primary[500]}`,
               }}
             >
               {(
@@ -96,10 +99,6 @@ const SideBar = () => {
                   alignItems="center"
                   ml="15px"
                   visibility={isCollapsed ? "hidden" : "visible"}
-                  sx={{
-                    transition: "100ms all ease-in-out"
-                  }}
-                  
                 >
                   <Typography variant="h3" color={colors.grey[100]}>
                     ADMINS
@@ -111,7 +110,15 @@ const SideBar = () => {
 
             {/* USER */}
             {(
-              <Box height={isCollapsed ? "0px" : "27.3dvh"} display="flex" flexDirection="column" justifyContent="center" sx={{transition: "100ms all ease-in-out", overflow: 'hidden', visibility: isCollapsed ? "hidden" : "visible"}}>
+              <Box 
+                height={isCollapsed && !isMobileScreen ? "0px" : "27.3dvh"} 
+                display="flex" 
+                flexDirection="column" 
+                justifyContent="center" 
+                sx={{
+                  transition: "100ms all ease-in-out", 
+                  overflow: 'hidden', 
+                  visibility: isCollapsed ? "hidden" : "visible"}}>
                 <Box display="flex" justifyContent="center" alignItems="center">
                   <img 
                     src="../../assets/user.png" 
@@ -130,7 +137,7 @@ const SideBar = () => {
           </Box>
           {/* MENUS */}
           <Box 
-            height={isCollapsed ? "91.8dvh" : "64.7dvh"}
+            height={isCollapsed && !isMobileScreen ? "90.8dvh" : "63.5dvh"}
             overflowY="auto" 
             padding={isCollapsed ? undefined : "3% 0 3% 10%"}
             borderTop={`1px solid ${colors.primary[500]}`}
@@ -170,10 +177,10 @@ const SideBar = () => {
           </Box>
         </Menu>
       </Sidebar>
-      <Box 
-        display={isMobileScreen && !isCollapsed ? 'flex' : 'none'} 
+      <Box display={isMobileScreen && !isCollapsed ? 'flex' : 'none'} 
         flex={1} 
-        onClick={retractSidebar}/>
+        onClick={collapseSidebar}
+      />
     </Box>
   )
 }
@@ -205,8 +212,7 @@ const MenuGroup = ({children, tag, isCollapsed, toggledMenu, selected, setToggle
           sx={{
             display:'flex',
             alignItems:'center',
-            justifyContent: isCollapsed ? "center" : "initial",
-            margin: isCollapsed ? "0px 0 0px 10px": "0px 0 0px 15px",
+            marginLeft: "15px",
             textTransform: "capitalize",
             cursor: "pointer",
           }}

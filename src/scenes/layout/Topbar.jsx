@@ -18,7 +18,7 @@ const Topbar = () => {
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
 
-  const {isContainerSize, isMobileScreen, isCollapsed} = useScreenSizeContext()
+  const {isContainerSize, isMobileScreen} = useScreenSizeContext()
 
   return (
     <Box 
@@ -26,19 +26,21 @@ const Topbar = () => {
       height='8%' 
       justifyContent="space-between" 
       p={isContainerSize.s ? 1 : '10px 1.2rem'}
+      backgroundColor= {colors.primary[500]}
+      borderBottom={`0.5px solid ${colors.primary[500]}`}
     >
       {/* SEARCH BAR */}
       <Box 
         display="flex"
         gap="1rem" 
       >
-        {(isMobileScreen) && <CollapseBtn />}
+      {isMobileScreen && <CollapseBtn isMobileBarIcon={true}/>}
         <Box 
           display="flex" 
           backgroundColor={colors.primary[400]}
           borderRadius="3px"
         >
-          <InputBase sx={{ml: 2, flex: "1"}} placeholder="Search"/>
+          <InputBase sx={{ml: 2, flex: "1", color: "#fff"}} placeholder="Search"/>
           <IconButton type="button" sx={{ p: 1}}>
             <Search/>
           </IconButton>

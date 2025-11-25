@@ -14,7 +14,7 @@ const Header = ({title, subtitle, style={height:"11dvh"}}) => {
         >
           {title}
         </Typography>
-        <Typography variant="h5" color={colors.grey[400]}> 
+        <Typography variant="h5" color={colors.primary[300]}> 
           {subtitle}
         </Typography>
     </Box>

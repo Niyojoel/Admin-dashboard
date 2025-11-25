@@ -2,7 +2,7 @@ import { Box } from '@mui/material'
 
 const BoxWithHeight = ({children, sx, ref}) => {
   return (
-    <Box height="75.3dvh" sx={sx} ref={ref}>{children}</Box>
+    <Box height="74.8dvh" sx={sx} ref={ref}>{children}</Box>
   )
 }
 
