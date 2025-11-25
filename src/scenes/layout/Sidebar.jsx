@@ -20,41 +20,37 @@ const SideBar = () => {
   const {isMobileScreen, isCollapsed, toggleSidebar, collapseSidebar} = useScreenSizeContext();
   
   const theme = useTheme();
-  const [selected, setSelected] = useState("");
-  const [toggledMenu, setToggledMenu] = useState("");
+  const [selectedMenu, setSelectedMenu] = useState("");
+  const [toggledMenuGroup, setToggledMenuGroup] = useState("");
   const colors = tokens(theme.palette.mode);
-  const [mobileSidebarCollapsed, setMobileSidebarCollapsed] = useState(true);
+  const mobileSidebarCollapsed = isMobileScreen && isCollapsed;
+
+  // const [toggleMobileSidebar, setToggleMobileSidebar] = useStat(second)
 
   const pathname = useHref();
 
-  useEffect(()=> {
-    let lastSelectedTitle;
+  const getSelectedMenuByPath = () => {
+    let lastSelectedMenuTitle;
 
-    // use reduce
     menus.forEach(menu => menu.navs.forEach(nav => {
       if(nav.to == pathname) {
-        lastSelectedTitle = nav.title;
+        lastSelectedMenuTitle = nav.title;
       }
-      return;
     }));
-
-    selected == "" && setSelected(pathname != '/' ? lastSelectedTitle : 'dashboard');
-  },[pathname, selected])
+    return lastSelectedMenuTitle;
+  }
 
   useEffect(()=> {
-  setMobileSidebarCollapsed(isMobileScreen && isCollapsed)
-}, [isMobileScreen, isCollapsed])
-
-  console.log(selected)
-  console.log(pathname)
+    selectedMenu == "" && setSelectedMenu(pathname != '/' ? getSelectedMenuByPath() : 'dashboard');
+  },[pathname, selectedMenu])
 
   return (
     <Box
       position={isMobileScreen ? "absolute" : "sticky"}
       display='flex'
       height="100dvh"
-      width={isMobileScreen ? isCollapsed ? "0" : "100%" :'fit-content' }
-      bgcolor={'rgba(255, 255, 255, 0.1)'}
+      width={isMobileScreen ? isCollapsed ? "0px" : "100%" :'fit-content'}
+      bgcolor={isCollapsed ? `transparent` : 'rgba(255, 255, 255, 0.1)'}
       zIndex={isMobileScreen ? "10" : "initial"}
       sx={{
         backdropFilter:'blur(2.5px) saturate(100%)',
@@ -67,14 +63,13 @@ const SideBar = () => {
       }}
     >
       <Sidebar 
-        collapsed={isCollapsed && !isMobileScreen} 
+        collapsed={isCollapsed}
         backgroundColor={colors.primary[400]}
         style={{
           border: "none", 
           transform: mobileSidebarCollapsed
-          ? "translateX(-100%)" 
-          : "translateX(0)",
-          overflow: "hidden",
+          ? "translateX(-100%)"
+          : "translateX(0%)",
           transition: "200ms all ease-in-out",
         }} 
       >
@@ -111,12 +106,12 @@ const SideBar = () => {
             {/* USER */}
             {(
               <Box 
-                height={isCollapsed && !isMobileScreen ? "0px" : "27.3dvh"} 
+                height={!isMobileScreen && isCollapsed ? "0px" : "27.3dvh"}
                 display="flex" 
-                flexDirection="column" 
+                flexDirection="column"
                 justifyContent="center" 
                 sx={{
-                  transition: "100ms all ease-in-out", 
+                  transition: "100ms height ease-in-out", 
                   overflow: 'hidden', 
                   visibility: isCollapsed ? "hidden" : "visible"}}>
                 <Box display="flex" justifyContent="center" alignItems="center">
@@ -148,8 +143,8 @@ const SideBar = () => {
               title="Dashboard"
               to="/"
               icon={<HomeOutlined />}
-              selected={selected}
-              setSelected={setSelected}
+              selectedMenu={selectedMenu}
+              setSelectedMenu={setSelectedMenu}
               isCollapsed = {isCollapsed}
             />
 
@@ -157,9 +152,9 @@ const SideBar = () => {
             <MenuGroup
               key={menu.groupTag}
               tag={menu.groupTag} 
-              toggledMenu={toggledMenu} 
-              setToggledMenu={setToggledMenu}
-              selected={selected}
+              toggledMenuGroup={toggledMenuGroup} 
+              setToggledMenuGroup={setToggledMenuGroup}
+              selectedMenu={selectedMenu}
             >
               {menu?.navs?.map(nav =>(
                 <MenuNav
@@ -167,8 +162,8 @@ const SideBar = () => {
                   title={nav.title}
                   to={nav.to}
                   icon={nav.icon}
-                  selected={selected}
-                  setSelected={setSelected}
+                  selectedMenu={selectedMenu}
+                  setSelectedMenu={setSelectedMenu}
                   isCollapsed ={isCollapsed}
                 />
               ))}
@@ -185,7 +180,7 @@ const SideBar = () => {
 }
 
 
-const MenuGroup = ({children, tag, toggledMenu, selected, setToggledMenu})=> {
+const MenuGroup = ({children, tag, toggledMenuGroup, selectedMenu, setToggledMenuGroup})=> {
 
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
@@ -193,13 +188,13 @@ const MenuGroup = ({children, tag, toggledMenu, selected, setToggledMenu})=> {
     const [activeMenuGroupTag, setActiveMenuGroupTag] = useState('');
 
     useEffect(()=> {
-      setDropDown(toggledMenu === tag ? true : false) 
-    }, [toggledMenu]);
+      setDropDown(toggledMenuGroup === tag ? true : false) 
+    }, [toggledMenuGroup]);
 
     useEffect(()=> {
-      const activeGroupTag = menus.find(menu => menu.navs.find(nav => (nav?.title?.toLowerCase() == selected?.toLowerCase())))?.groupTag;
+      const activeGroupTag = menus.find(menu => menu.navs.find(nav => (nav?.title?.toLowerCase() == selectedMenu?.toLowerCase())))?.groupTag;
       setActiveMenuGroupTag(activeGroupTag)
-    }, [menus, selected])
+    }, [menus, selectedMenu])
 
     return (
       <Box>
@@ -211,7 +206,7 @@ const MenuGroup = ({children, tag, toggledMenu, selected, setToggledMenu})=> {
             textTransform: "capitalize",
             cursor: "pointer",
           }}
-          onClick={()=>setToggledMenu(dropDown ? "" : tag)}
+          onClick={()=>setToggledMenuGroup(dropDown ? "" : tag)}
         >
         <Typography
           variant="h6"

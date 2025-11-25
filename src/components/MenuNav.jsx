@@ -4,7 +4,7 @@ import { MenuItem } from "react-pro-sidebar";
 import { useNavigate } from "react-router-dom";
 import { useScreenSizeContext } from "../context/useScreenSizeContext";
 
-const MenuNav = ({title, to, icon, selected, setSelected, isCollapsed}) => {
+const MenuNav = ({title, to, icon, selectedMenu, setSelectedMenu, isCollapsed}) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const navigate = useNavigate();
@@ -12,14 +12,15 @@ const MenuNav = ({title, to, icon, selected, setSelected, isCollapsed}) => {
   
   return (
     <MenuItem
-      active = {title?.toLowerCase() == selected?.toLowerCase() }
+      active = {title?.toLowerCase() == selectedMenu?.toLowerCase() }
       style={{
         backgroundColor: 'transparent',
         color: colors.grey[100],
         marginLeft: !isCollapsed ? "-15px" : '0',
+        transition: "100ms all ease-in-out"
       }}
       onClick={() => {
-        setSelected(title);
+        setSelectedMenu(title);
         navigate(to);
         isMobileScreen && collapseSidebar();
       }}
