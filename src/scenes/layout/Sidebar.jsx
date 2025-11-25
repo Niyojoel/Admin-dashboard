@@ -157,7 +157,6 @@ const SideBar = () => {
             <MenuGroup
               key={menu.groupTag}
               tag={menu.groupTag} 
-              isCollapsed={isCollapsed} 
               toggledMenu={toggledMenu} 
               setToggledMenu={setToggledMenu}
               selected={selected}
@@ -186,16 +185,12 @@ const SideBar = () => {
 }
 
 
-const MenuGroup = ({children, tag, isCollapsed, toggledMenu, selected, setToggledMenu})=> {
+const MenuGroup = ({children, tag, toggledMenu, selected, setToggledMenu})=> {
 
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     const [dropDown, setDropDown] = useState(false);
     const [activeMenuGroupTag, setActiveMenuGroupTag] = useState('');
-
-    useEffect(()=> {
-      isCollapsed && setToggledMenu('')
-    }, [isCollapsed])
 
     useEffect(()=> {
       setDropDown(toggledMenu === tag ? true : false) 

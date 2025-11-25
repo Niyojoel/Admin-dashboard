@@ -8,7 +8,7 @@ const MenuNav = ({title, to, icon, selected, setSelected, isCollapsed}) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const navigate = useNavigate();
-  const {collapseSidebar} = useScreenSizeContext();
+  const {collapseSidebar, isMobileScreen} = useScreenSizeContext();
   
   return (
     <MenuItem
@@ -21,7 +21,7 @@ const MenuNav = ({title, to, icon, selected, setSelected, isCollapsed}) => {
       onClick={() => {
         setSelected(title);
         navigate(to);
-        collapseSidebar();
+        isMobileScreen && collapseSidebar();
       }}
       icon={icon}
     >
