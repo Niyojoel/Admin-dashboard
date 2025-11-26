@@ -1,18 +1,21 @@
-import { Box, Button, IconButton, Typography, useMediaQuery, useTheme } from "@mui/material"
+import { Box, Button, IconButton, Typography, useTheme } from "@mui/material"
 import Header from "../../components/global/Header"
 import {ProgressPie, StatBox } from "../../components"
 import { mockTransactions } from "../../data/mockData"
 import { tokens } from "../../theme"
 import { BarChart, GeographyChart, LineChart} from "../../components/global"
-import { DownloadOutlined, Email, PersonAdd, PointOfSale, Traffic } from "@mui/icons-material"
+import { DownloadOutlined} from "@mui/icons-material"
 import { useEffect, useState } from "react"
 import { useScreenSizeContext } from "../../context/useScreenSizeContext"
 import { BoxWithHeight } from "../layout"
 import contentStyles from "../../utils/genericSceneStyles"
+import { StatBox as StatBoxInfo } from "../../data/statBox"
+import { useNavigate } from "react-router-dom"
 
 const Dashboard = () => {
 
   const {isContainerSize} = useScreenSizeContext();
+  const {statBoxData} = StatBoxInfo()
   
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -48,48 +51,17 @@ const Dashboard = () => {
         gap: contentStyles.spacing
       }}>
         {/* FIRST ROW */}
-        <BoxSpan span={3} display="flex">
-          <StatBox 
-            title={"12,361"} 
-            subtitle={"Emails sent"} 
-            increase={"+14%"} 
-            icon={<Email sx={{color: colors.greenAccent[600], fontSize: "26px"}}/>} 
-            progress={'0.75'}
-          />
-        </BoxSpan>
-
-        <BoxSpan span={3} display="flex">
-          <StatBox 
-            title={"431,225"} 
-            subtitle={"Sales obtained"} 
-            increase={"+21%"} 
-            icon={<PointOfSale sx={{color: colors.greenAccent[600], fontSize: "26px"}}/>} 
-            progress={'0.5'}
-          />
-        </BoxSpan>
-
-        <BoxSpan span={3} display="flex">
-          <StatBox
-            title="32,441"
-            subtitle="New Clients"
-            progress="0.30"
-            increase="+5%"
-            icon={<PersonAdd sx={{ color: colors.greenAccent[600], fontSize: "26px" }}/>}
-          />
-        </BoxSpan>
-
-        <BoxSpan span={3} display="flex">
-          <StatBox
-            title="1,325,134"
-            subtitle="Traffic Received"
-            progress="0.80"
-            increase="+43%"
-            icon={<Traffic sx={{ color: colors.greenAccent[600], fontSize: "26px" }}/>}
-          />
-        </BoxSpan>
+        {statBoxData?.map(({title, subtitle, icon, progress, increase}) => {
+            return (
+              <BoxSpan span={3} display="flex">
+              <StatBox title={title} subtitle={subtitle} increase={increase} icon={icon} progress={progress}/>
+              </BoxSpan>
+            )
+          })
+        }
 
         {/* SECOND ROW */}
-        <BoxSpan span={8} rowSpan={2}>
+        <BoxSpan span={8} rowSpan={2} link={'/line'}>
           <BoxSpaceBetween 
             styles={{ mt:"25px", padding:"0 30px"}} 
           >
@@ -172,7 +144,7 @@ const Dashboard = () => {
         </BoxSpan>
 
         {/* THIRD ROW */}
-        <BoxSpan span={4} rowSpan={2} styles={{padding: "30px"}}>
+        <BoxSpan span={4} rowSpan={2} styles={{padding: "30px"}} link={'/pie'}>
           <Typography variant="h5" fontWeight="600">
             Campaign
           </Typography>
@@ -193,7 +165,7 @@ const Dashboard = () => {
           </Box>
         </BoxSpan>
 
-        <BoxSpan span={4} rowSpan={2}>
+        <BoxSpan span={4} rowSpan={2} link={'/bar'}>
           <Typography variant="h5" fontWeight="600" sx={{p:"30px 30px 0 30px"}}>
             Sales Quantity
           </Typography>
@@ -205,7 +177,7 @@ const Dashboard = () => {
           </Box>
         </BoxSpan>
 
-        <BoxSpan span={4} rowSpan={2} styles={{padding: "30px"}}>
+        <BoxSpan span={4} rowSpan={2} styles={{padding: "30px"}} link={'/geography'}>
           <Typography variant="h5" fontWeight="600" sx={{marginBottom: "15px"}}>
             Geography Based Traffic
           </Typography>
@@ -218,10 +190,11 @@ const Dashboard = () => {
   )
 }
 
-const BoxSpan = ({children, span, rowSpan = 1, display="block", styles})=> {
+const BoxSpan = ({children, span, rowSpan = 1, display="block", styles, link})=> {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const {isContainerSize} = useScreenSizeContext();
+  const navigate = useNavigate()
 
   const [widthSpan, setWidthSpan] = useState({
     l: "",
@@ -250,6 +223,7 @@ const BoxSpan = ({children, span, rowSpan = 1, display="block", styles})=> {
       alignItems={"center"}
       justifyContent={"center"}
       sx={styles}
+      onClick={()=> link && navigate(link)}
     >
       {children}
     </Box>

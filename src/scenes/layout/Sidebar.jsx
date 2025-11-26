@@ -22,16 +22,14 @@ const SideBar = () => {
   const theme = useTheme();
   const [selectedMenu, setSelectedMenu] = useState("");
   const [toggledMenuGroup, setToggledMenuGroup] = useState("");
-  const colors = tokens(theme.palette.mode);
-  const mobileSidebarCollapsed = isMobileScreen && isCollapsed;
+  const [activeMenuGroupTag, setActiveMenuGroupTag] = useState('');
 
-  // const [toggleMobileSidebar, setToggleMobileSidebar] = useStat(second)
+  const colors = tokens(theme.palette.mode);
 
   const pathname = useHref();
 
   const getSelectedMenuByPath = () => {
     let lastSelectedMenuTitle;
-
     menus.forEach(menu => menu.navs.forEach(nav => {
       if(nav.to == pathname) {
         lastSelectedMenuTitle = nav.title;
@@ -40,8 +38,15 @@ const SideBar = () => {
     return lastSelectedMenuTitle;
   }
 
+  const getActiveMenuGroup = () => {
+    const selected = getSelectedMenuByPath ()
+    return menus.find(menu => menu.navs.find(nav => (nav?.title?.toLowerCase() == selected?.toLowerCase())))?.groupTag;
+  }
+
   useEffect(()=> {
-    selectedMenu == "" && setSelectedMenu(pathname != '/' ? getSelectedMenuByPath() : 'dashboard');
+    setSelectedMenu(pathname != '/' ? getSelectedMenuByPath() : 'dashboard');
+    setActiveMenuGroupTag(getActiveMenuGroup());
+    setToggledMenuGroup(getActiveMenuGroup());
   },[pathname, selectedMenu])
 
   return (
@@ -67,7 +72,7 @@ const SideBar = () => {
         backgroundColor={colors.primary[400]}
         style={{
           border: "none", 
-          transform: mobileSidebarCollapsed
+          transform: isMobileScreen && isCollapsed
           ? "translateX(-100%)"
           : "translateX(0%)",
           transition: "200ms all ease-in-out",
@@ -154,7 +159,7 @@ const SideBar = () => {
               tag={menu.groupTag} 
               toggledMenuGroup={toggledMenuGroup} 
               setToggledMenuGroup={setToggledMenuGroup}
-              selectedMenu={selectedMenu}
+              activeMenuGroupTag={activeMenuGroupTag}
             >
               {menu?.navs?.map(nav =>(
                 <MenuNav
@@ -180,21 +185,15 @@ const SideBar = () => {
 }
 
 
-const MenuGroup = ({children, tag, toggledMenuGroup, selectedMenu, setToggledMenuGroup})=> {
+const MenuGroup = ({children, tag, toggledMenuGroup, activeMenuGroupTag, setToggledMenuGroup})=> {
 
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     const [dropDown, setDropDown] = useState(false);
-    const [activeMenuGroupTag, setActiveMenuGroupTag] = useState('');
 
     useEffect(()=> {
       setDropDown(toggledMenuGroup === tag ? true : false) 
     }, [toggledMenuGroup]);
-
-    useEffect(()=> {
-      const activeGroupTag = menus.find(menu => menu.navs.find(nav => (nav?.title?.toLowerCase() == selectedMenu?.toLowerCase())))?.groupTag;
-      setActiveMenuGroupTag(activeGroupTag)
-    }, [menus, selectedMenu])
 
     return (
       <Box>
