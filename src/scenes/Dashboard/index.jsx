@@ -241,9 +241,6 @@ const BoxSpan = ({children, span, rowSpan = 1, display="block", styles, link})=>
     setWidthSpan({l, xl:`span ${span}`})
   }, [span])
 
-  const onClick = (link) => navigate(link)
-
-
   return (
     widthSpan.xl &&
     <Box
@@ -254,7 +251,7 @@ const BoxSpan = ({children, span, rowSpan = 1, display="block", styles, link})=>
       alignItems={"center"}
       justifyContent={"center"}
       sx={styles}
-      onClick={()=>onClick(link)}
+      onClick={()=>navigate(link)}
     >
         {children}
     </Box>
