@@ -9,6 +9,7 @@ import { useEffect, useState } from "react"
 import { useScreenSizeContext } from "../../context/useScreenSizeContext"
 import { BoxWithHeight } from "../layout"
 import contentStyles from "../../utils/genericSceneStyles"
+import { Navigate, useNavigate} from "react-router-dom"
 
 const Dashboard = () => {
 
@@ -89,7 +90,7 @@ const Dashboard = () => {
         </BoxSpan>
 
         {/* SECOND ROW */}
-        <BoxSpan span={8} rowSpan={2}>
+        <BoxSpan span={8} rowSpan={2} link={"/line"}>
           <BoxSpaceBetween 
             styles={{ mt:"25px", padding:"0 30px"}} 
           >
@@ -172,7 +173,7 @@ const Dashboard = () => {
         </BoxSpan>
 
         {/* THIRD ROW */}
-        <BoxSpan span={4} rowSpan={2} styles={{padding: "30px"}}>
+        <BoxSpan span={4} rowSpan={2} styles={{padding: "30px"}} link={"/pie"}>
           <Typography variant="h5" fontWeight="600">
             Campaign
           </Typography>
@@ -193,7 +194,7 @@ const Dashboard = () => {
           </Box>
         </BoxSpan>
 
-        <BoxSpan span={4} rowSpan={2}>
+        <BoxSpan span={4} rowSpan={2} link={"/bar"}>
           <Typography variant="h5" fontWeight="600" sx={{p:"30px 30px 0 30px"}}>
             Sales Quantity
           </Typography>
@@ -205,7 +206,7 @@ const Dashboard = () => {
           </Box>
         </BoxSpan>
 
-        <BoxSpan span={4} rowSpan={2} styles={{padding: "30px"}}>
+        <BoxSpan span={4} rowSpan={2} styles={{padding: "30px"}} link={"/geography"}>
           <Typography variant="h5" fontWeight="600" sx={{marginBottom: "15px"}}>
             Geography Based Traffic
           </Typography>
@@ -218,10 +219,11 @@ const Dashboard = () => {
   )
 }
 
-const BoxSpan = ({children, span, rowSpan = 1, display="block", styles})=> {
+const BoxSpan = ({children, span, rowSpan = 1, display="block", styles, link})=> {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const {isContainerSize} = useScreenSizeContext();
+  const navigate = useNavigate()
 
   const [widthSpan, setWidthSpan] = useState({
     l: "",
@@ -239,6 +241,8 @@ const BoxSpan = ({children, span, rowSpan = 1, display="block", styles})=> {
     setWidthSpan({l, xl:`span ${span}`})
   }, [span])
 
+  const onClick = (link) => navigate(link)
+
 
   return (
     widthSpan.xl &&
@@ -250,8 +254,9 @@ const BoxSpan = ({children, span, rowSpan = 1, display="block", styles})=> {
       alignItems={"center"}
       justifyContent={"center"}
       sx={styles}
+      onClick={()=>onClick(link)}
     >
-      {children}
+        {children}
     </Box>
   )
 }

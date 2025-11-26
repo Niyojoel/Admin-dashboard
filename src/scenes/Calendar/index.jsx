@@ -72,10 +72,10 @@ const index = () => {
             display: "flex",
             m: "7px 0 0", 
             flexDirection: isContainerSize?.m ? 'row': 'column', 
+            flexWrap: "wrap",
             gap: "10px"
           }}
-            
-            >
+          >
             {currentEvents.map(event=> (
               <ListItem 
               key={event.id} 

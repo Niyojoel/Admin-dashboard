@@ -17,15 +17,12 @@ import CollapseBtn from "./CollapseBtn";
 
 const SideBar = () => {
 
-  const {isMobileScreen, isCollapsed, toggleSidebar, collapseSidebar} = useScreenSizeContext();
+  const {isMobileScreen, isCollapsed, toggleSidebar, collapseSidebar, isContainerSize} = useScreenSizeContext();
   
   const theme = useTheme();
   const [selectedMenu, setSelectedMenu] = useState("");
   const [toggledMenuGroup, setToggledMenuGroup] = useState("");
   const colors = tokens(theme.palette.mode);
-  const mobileSidebarCollapsed = isMobileScreen && isCollapsed;
-
-  // const [toggleMobileSidebar, setToggleMobileSidebar] = useStat(second)
 
   const pathname = useHref();
 
@@ -41,18 +38,23 @@ const SideBar = () => {
   }
 
   useEffect(()=> {
-    selectedMenu == "" && setSelectedMenu(pathname != '/' ? getSelectedMenuByPath() : 'dashboard');
+    setSelectedMenu(pathname != '/' ? getSelectedMenuByPath() : 'dashboard');
   },[pathname, selectedMenu])
+  
+  console.log(isContainerSize?.c);
 
   return (
     <Box
       position={isMobileScreen ? "absolute" : "sticky"}
       display='flex'
       height="100dvh"
-      width={isMobileScreen ? isCollapsed ? "0px" : "100%" :'fit-content'}
-      bgcolor={isCollapsed ? `transparent` : 'rgba(255, 255, 255, 0.1)'}
+      width={isMobileScreen ? isCollapsed ? "0px" : "100%" :!isMobileScreen && isCollapsed ? "5rem" :'fit-content'}
+      bgcolor={isCollapsed ? `${colors.primary[400]}` : 'rgba(255, 255, 255, 0.1)'}
+      overflowX={!isMobileScreen && isCollapsed ? "clip" : "hidden"}
+      overflowY="hidden"
       zIndex={isMobileScreen ? "10" : "initial"}
       sx={{
+        transition: "500ms position ease-in-out",
         backdropFilter:'blur(2.5px) saturate(100%)',
         "& .ps-menu-button:hover": {
           color: "#868dfb !important",
@@ -63,14 +65,15 @@ const SideBar = () => {
       }}
     >
       <Sidebar 
-        collapsed={isCollapsed}
+        collapsed={isMobileScreen ? !isMobileScreen : isCollapsed}
         backgroundColor={colors.primary[400]}
+        overflow="hidden"
         style={{
           border: "none", 
-          transform: mobileSidebarCollapsed
+          transform: isMobileScreen && isCollapsed
           ? "translateX(-100%)"
           : "translateX(0%)",
-          transition: "200ms all ease-in-out",
+          transition: "200ms all ease-in-out"
         }} 
       >
         <Menu>
@@ -194,6 +197,7 @@ const MenuGroup = ({children, tag, toggledMenuGroup, selectedMenu, setToggledMen
     useEffect(()=> {
       const activeGroupTag = menus.find(menu => menu.navs.find(nav => (nav?.title?.toLowerCase() == selectedMenu?.toLowerCase())))?.groupTag;
       setActiveMenuGroupTag(activeGroupTag)
+      setToggledMenuGroup(activeGroupTag)
     }, [menus, selectedMenu])
 
     return (

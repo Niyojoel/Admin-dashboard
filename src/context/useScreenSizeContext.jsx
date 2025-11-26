@@ -1,4 +1,4 @@
-import { useMediaQuery } from "@mui/material";
+import { mobileStepperClasses, useMediaQuery } from "@mui/material";
 import { createContext, useContext, useEffect, useState } from "react";
 
 const ScreenSizeContext = createContext(null);
@@ -12,11 +12,15 @@ export const ScreenSizeProvider = ({children}) => {
 
   //Statistics Chart/Table responsiveness screen sizes
   const CONTAINER_SMALLSIZE = 500;
-  const CONTAINER_MEDIUMSIZE = 900;
+  const CONTAINER_MEDIUMSIZE = 800;
   const CONTAINER_BIGSIZE = 1200;
+
+  // to add transition property on sidebar on screen sizes beyond mobile
+  const CONTAINER_CUSTOMSIZE = 667;
   
-  const [isContainerSize, setIsContainerSize] = useState({s: null, m: null, l: null})
+  const [isContainerSize, setIsContainerSize] = useState({s: null, m: null, l: null, c: null})
   const [isCollapsed, setIsCollapsed] = useState(true);
+
 
   const getContainerSize = (container) => {
     const containerWidth = container.clientWidth;
@@ -24,6 +28,7 @@ export const ScreenSizeProvider = ({children}) => {
       s: containerWidth < CONTAINER_SMALLSIZE,
       m: containerWidth < CONTAINER_MEDIUMSIZE,
       l: containerWidth > CONTAINER_BIGSIZE,
+      c: containerWidth > CONTAINER_CUSTOMSIZE,
     })
   }
 
@@ -56,10 +61,3 @@ export const useScreenSizeContext = () => {
 
     return value;
 }
-
-const contentStyles = {
-  height: "75.3dvh",
-  spacing: "10px"
-};
-
-export default contentStyles;
